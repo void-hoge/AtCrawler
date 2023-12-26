@@ -1,0 +1,27 @@
+[project]
+name = "atcrawler"
+version = "0.0.1"
+authors = [{ name="void-hoge", email="coilgunrailgun@gmail.com" }]
+description = "A crawling tool for submitted codes of AtCoder."
+readme = "README.md"
+requires-python = ">=3.11"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: GNU GPL v3",
+    "Operating System :: OS Independent",
+]
+
+dependencies = [
+    "requests ~= 2.23.0",
+    "beautifulsoup4 ~= 4.11.2"
+]
+
+[project.optional-dependencies]
+dev = [
+    "build",
+    "twine",
+]
+
+[project.scripts]
+atcrawler = "atcrawler.atcrawler:main"
+
