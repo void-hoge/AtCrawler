@@ -35,3 +35,9 @@ options:
   --maxsubmissions MAXSUBMISSIONS, -m MAXSUBMISSIONS
                         When crawl mode, the max submissions number.
 ```
+
+## author
+- MugiNoda (void-hoge)
+
+## lisence
+- GPL v3
