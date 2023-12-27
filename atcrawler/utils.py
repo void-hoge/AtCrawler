@@ -22,7 +22,7 @@ LANGUAGE_SUFFIX = {
     'Kotlin': 'kt'
 }
 
-REQUEST_INTERVAL = 0.1
+REQUEST_INTERVAL = 0.5
 
 class SubmissionOrder(Enum):
     created = 'created'
