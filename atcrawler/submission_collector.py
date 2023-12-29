@@ -82,9 +82,9 @@ class SubmissionCollector(EnvironmentInitializer):
         langkey = self.lang2key(language)
         if orderby:
             if descending:
-                url = f'{self.url}/submissions?desc=true&f.Task={task}&f.LanguageName={langkey}&f.Status={result}&f.User={username}&f.page={page}&orderBy={orderby}&page={page}'
+                url = f'{self.url}/submissions?desc=true&f.Task={task}&f.LanguageName={langkey}&f.Status={result}&f.User={username}&orderBy={orderby}&page={page}'
             else:
-                url = f'{self.url}/submissions?f.Task={task}&f.LanguageName={langkey}&f.Status={result}&f.User={username}&f.page={page}&orderBy={orderby}&page={page}'
+                url = f'{self.url}/submissions?f.Task={task}&f.LanguageName={langkey}&f.Status={result}&f.User={username}&orderBy={orderby}&page={page}'
         else:
             url = f'{self.url}/submissions?f.Task={task}&f.LanguageName={langkey}&f.Status={result}&f.User={username}&page={page}'
         return url
