@@ -31,7 +31,7 @@ class SubmissionCollector(EnvironmentInitializer):
             page += 1
             if len(ids) == 0:
                 break
-
+        submission_ids = submission_ids[0:maxsubmissions]
         print(f'Detected {len(submission_ids)} submissions.', file=sys.stderr)
         for idx in submission_ids:
             html = self.session.get(f'{self.url}/submissions/{idx}')
