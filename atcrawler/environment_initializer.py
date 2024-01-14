@@ -74,7 +74,7 @@ class EnvironmentInitializer:
         lines = html.split('\n')
         INPUT_START_RE = r'<h[0-9]+>Sample Input ([0-9]+)</h[0-9]+><pre>(.+)'
         INPUT_END_RE = r'</pre>'
-        OUTPUT_START_RE = '<h[0-9]+>Sample Output ([0-9]+)</h[0-9]+><pre>(.+)'
+        OUTPUT_START_RE = r'<h[0-9]+>Sample Output ([0-9]+)</h[0-9]+><pre>(.+)'
         OUTPUT_END_RE = r'</pre>'
         inputs = []
         outputs = []
@@ -102,10 +102,10 @@ class EnvironmentInitializer:
             elif state == 'output':
                 if re.search(OUTPUT_END_RE, line):
                     state = 'init'
-                    inputs[-1] += '\n'
+                    outputs[-1] += '\n'
                     continue
                 else:
-                    inputs[-1] += '\n' + line
+                    outputs[-1] += '\n' + line
         samples = []
         for i, o in zip(inputs, outputs):
             samples.append({'input': i, 'output': o})
