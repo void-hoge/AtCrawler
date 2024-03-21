@@ -6,6 +6,7 @@ import re
 import time
 import getpass
 import requests
+import html
 from enum import Enum
 from bs4 import BeautifulSoup
 
@@ -24,8 +25,8 @@ class EnvironmentInitializer:
         self.create_samples(self.tasks)
 
     def get_tasks(self):
-        html = self.session.get(f'{self.url}/tasks')
-        soup = BeautifulSoup(html, 'html.parser')
+        page = self.session.get(f'{self.url}/tasks')
+        soup = BeautifulSoup(page, 'html.parser')
         tasks = {}
         for link in soup.find_all('a'):
             if link.get('href'):
@@ -62,16 +63,16 @@ class EnvironmentInitializer:
     def create_samples(self, tasks):
         for prefix, task in tasks.items():
             print(f'Downloading and parsing samples for task {prefix.upper()}...', file=sys.stderr)
-            html = self.session.get(f'{task["link"]}')
-            samples = self.parse_samples(html)
+            page = self.session.get(f'{task["link"]}')
+            samples = self.parse_samples(page)
             for idx, sample in enumerate(samples):
                 with open(f'{task["dirname"]}/test{idx+1}', 'w') as f:
                     f.write(sample['input'])
                 with open(f'{task["dirname"]}/exp{idx+1}', 'w') as f:
                     f.write(sample['output'])
 
-    def parse_samples(self, html):
-        lines = html.split('\n')
+    def parse_samples(self, page):
+        lines = page.split('\n')
         INPUT_START_RE = r'<h[0-9]+>Sample Input ([0-9]+)</h[0-9]+><pre>(.+)'
         INPUT_END_RE = r'</pre>'
         OUTPUT_START_RE = r'<h[0-9]+>Sample Output ([0-9]+)</h[0-9]+><pre>(.+)'
@@ -84,12 +85,12 @@ class EnvironmentInitializer:
             if state == 'init':
                 match = re.search(INPUT_START_RE, line)
                 if match:
-                    inputs.append(match.group(2))
+                    inputs.append(html.unescape(match.group(2)))
                     state = 'input'
                     continue
                 match = re.search(OUTPUT_START_RE, line)
                 if match:
-                    outputs.append(match.group(2))
+                    outputs.append(html.unescape(match.group(2)))
                     state = 'output'
                     continue
             elif state == 'input':
@@ -98,14 +99,14 @@ class EnvironmentInitializer:
                     inputs[-1] += '\n'
                     continue
                 else:
-                    inputs[-1] += '\n' + line
+                    inputs[-1] += '\n' + html.unescape(line)
             elif state == 'output':
                 if re.search(OUTPUT_END_RE, line):
                     state = 'init'
                     outputs[-1] += '\n'
                     continue
                 else:
-                    outputs[-1] += '\n' + line
+                    outputs[-1] += '\n' + html.unescape(line)
         samples = []
         for i, o in zip(inputs, outputs):
             samples.append({'input': i, 'output': o})
